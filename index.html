@@ -7,440 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #f7f5f1;
-      --bg2: #f0ede7;
-      --surface: #ffffff;
-      --border: rgba(0,0,0,0.08);
-      --border-strong: rgba(0,0,0,0.14);
-      --text: #1a1814;
-      --muted: #7a7368;
-      --accent: #8b6914;
-      --accent-light: rgba(139,105,20,0.1);
-      --red: #9b2335;
-      --red-light: rgba(155,35,53,0.08);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* CURSOR */
-    #cursor {
-      position: fixed; top: 0; left: 0; z-index: 9999;
-      width: 7px; height: 7px;
-      background: var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%,-50%);
-    }
-    #cursor-ring {
-      position: fixed; top: 0; left: 0; z-index: 9998;
-      width: 28px; height: 28px;
-      border: 1px solid rgba(139,105,20,0.45);
-      border-radius: 50%;
-      pointer-events: none;
-      transition: transform 0.38s cubic-bezier(0.23,1,0.32,1);
-      transform: translate(-50%,-50%);
-    }
-
-    /* LOGO BAR */
-    .logo-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 60px;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-    .logo-bar img {
-      height: 44px;
-      width: auto;
-      object-fit: contain;
-      opacity: 0.88;
-      transition: opacity 0.25s;
-    }
-    .logo-bar img:hover { opacity: 1; }
-    .logo-divider { width: 1px; height: 30px; background: var(--border-strong); }
-
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 60px;
-      height: 54px;
-      background: rgba(247,245,241,0.96);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem; font-weight: 600; font-style: italic;
-      color: var(--accent); letter-spacing: 0.04em; text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 30px; list-style: none; }
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.67rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      transition: color 0.22s; position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 1px; background: var(--accent);
-      transition: width 0.28s ease;
-    }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-links a:hover::after { width: 100%; }
-
-    /* HERO */
-    .hero {
-      padding: 80px 60px 100px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 80px;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,0,0,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.022) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 100% at 0% 50%, black 10%, transparent 75%);
-      pointer-events: none;
-    }
-    .hero-left { position: relative; z-index: 1; }
-    .hero-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.67rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 20px;
-      display: flex; align-items: center; gap: 14px;
-      opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
-    }
-    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
-    .hero-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(4.5rem, 8vw, 7.5rem);
-      font-weight: 300; line-height: 0.92; letter-spacing: -0.02em;
-      color: var(--text); margin-bottom: 10px;
-      opacity: 0; animation: fadeUp 0.8s 0.22s forwards;
-    }
-    .hero-name em { font-style: italic; color: var(--accent); }
-    .hero-en {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem; font-weight: 300; font-style: italic;
-      color: var(--muted); margin-bottom: 14px;
-      opacity: 0; animation: fadeUp 0.8s 0.34s forwards;
-    }
-    .party-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      margin-bottom: 28px;
-      padding: 5px 14px;
-      background: var(--red-light);
-      border: 1px solid rgba(155,35,53,0.2);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.64rem; letter-spacing: 0.1em;
-      color: var(--red);
-      opacity: 0; animation: fadeUp 0.8s 0.44s forwards;
-    }
-    .party-badge::before { content: '★'; font-size: 0.7rem; }
-    .hero-desc {
-      font-size: 0.97rem; color: var(--muted); max-width: 520px;
-      line-height: 1.95; margin-bottom: 36px;
-      opacity: 0; animation: fadeUp 0.8s 0.54s forwards;
-    }
-    .hero-desc strong { color: var(--text); font-weight: 400; }
-    .hero-cta {
-      display: flex; gap: 14px; align-items: center;
-      opacity: 0; animation: fadeUp 0.8s 0.66s forwards;
-    }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 26px;
-      background: var(--text); color: var(--bg);
-      text-decoration: none;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase;
-      transition: background 0.25s;
-    }
-    .btn-primary:hover { background: var(--accent); }
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 26px;
-      border: 1px solid var(--border-strong); color: var(--muted);
-      text-decoration: none;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase;
-      transition: border-color 0.25s, color 0.25s;
-    }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* PHOTO */
-    .hero-photo {
-      position: relative; z-index: 1;
-      opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
-    }
-    .hero-photo img {
-      width: 100%; aspect-ratio: 3/4;
-      object-fit: cover; object-position: top center;
-      display: block; filter: grayscale(6%);
-    }
-    .photo-frame {
-      position: absolute; top: 12px; left: 12px; right: -12px; bottom: -12px;
-      border: 1px solid rgba(139,105,20,0.22); z-index: -1;
-    }
-
-    /* SECTIONS */
-    section { padding: 96px 60px; }
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 4.5vw, 3.5rem); font-weight: 300;
-      line-height: 1.1; color: var(--text); margin-bottom: 52px;
-    }
-    .section-title em { font-style: italic; color: var(--accent); }
-
-    /* ABOUT */
-    #about { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; align-items: start; }
-    .about-text { font-size: 1rem; color: var(--muted); line-height: 2; }
-    .about-text p + p { margin-top: 18px; }
-    .about-text strong { color: var(--text); font-weight: 400; }
-    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-    .stat-card {
-      background: var(--surface); padding: 26px 22px;
-      border: 1px solid var(--border); transition: border-color 0.25s;
-    }
-    .stat-card:hover { border-color: rgba(139,105,20,0.3); }
-    .stat-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem; font-weight: 300; color: var(--accent);
-      line-height: 1; display: block;
-    }
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); margin-top: 7px; display: block;
-    }
-
-    /* EDUCATION */
-    #education { background: var(--surface); border-bottom: 1px solid var(--border); }
-    .edu-list { display: flex; flex-direction: column; gap: 2px; }
-    .edu-item {
-      display: grid; grid-template-columns: 180px 1fr auto;
-      gap: 40px; align-items: start;
-      padding: 38px 40px;
-      background: var(--bg); border: 1px solid var(--border);
-      transition: border-color 0.28s, transform 0.28s;
-    }
-    .edu-item:hover { border-color: rgba(139,105,20,0.28); transform: translateX(5px); }
-    .edu-period {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.63rem; letter-spacing: 0.08em; color: var(--muted); padding-top: 4px;
-    }
-    .edu-school {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.55rem; font-weight: 400; color: var(--text); margin-bottom: 6px;
-    }
-    .edu-major { font-size: 0.85rem; color: var(--muted); }
-    .edu-gpa { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); margin-top: 6px; }
-    .edu-degree {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--accent); padding: 6px 13px;
-      border: 1px solid rgba(139,105,20,0.32);
-      white-space: nowrap; align-self: flex-start;
-    }
-
-    /* RESEARCH */
-    #research { background: var(--bg); border-bottom: 1px solid var(--border); }
-    .paper-card {
-      padding: 34px 40px; border: 1px solid var(--border);
-      background: var(--surface); margin-bottom: 2px;
-      transition: border-color 0.28s, box-shadow 0.28s;
-      position: relative; overflow: hidden;
-    }
-    .paper-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 3px; background: var(--accent);
-      transform: scaleY(0); transform-origin: bottom;
-      transition: transform 0.35s ease;
-    }
-    .paper-card:hover::before { transform: scaleY(1); }
-    .paper-card:hover { border-color: rgba(139,105,20,0.2); box-shadow: 0 3px 18px rgba(0,0,0,0.04); }
-    .paper-meta { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; flex-wrap: wrap; }
-    .paper-venue {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.61rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--accent); padding: 3px 10px;
-      background: var(--accent-light); border: 1px solid rgba(139,105,20,0.2);
-    }
-    .paper-year { font-family: 'DM Mono', monospace; font-size: 0.61rem; color: var(--muted); }
-    .paper-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.57rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--red); padding: 3px 9px;
-      border: 1px solid rgba(155,35,53,0.22); margin-left: auto;
-    }
-    .paper-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.28rem; font-weight: 400; color: var(--text);
-      line-height: 1.45; margin-bottom: 10px;
-    }
-    .paper-authors { font-size: 0.81rem; color: var(--muted); }
-    .paper-authors strong { color: var(--accent); font-weight: 400; }
-    .research-current {
-      margin-top: 36px; padding: 34px 40px;
-      border: 1px solid rgba(139,105,20,0.18);
-      background: rgba(139,105,20,0.04);
-    }
-    .rc-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.61rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 13px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .pulse {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent); animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.75); }
-    }
-    .rc-text { font-size: 0.95rem; color: var(--muted); line-height: 1.95; }
-    .rc-text strong { color: var(--text); font-weight: 400; }
-
-    /* AWARDS */
-    #awards { background: var(--surface); border-bottom: 1px solid var(--border); }
-    .awards-section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.61rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--muted); margin-top: 48px; margin-bottom: 14px;
-      padding-bottom: 11px; border-bottom: 1px solid var(--border);
-    }
-    .awards-section-label:first-of-type { margin-top: 0; }
-    .awards-list { display: flex; flex-direction: column; gap: 2px; }
-    .award-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 19px 26px; gap: 18px;
-      background: var(--bg); border: 1px solid var(--border);
-      transition: border-color 0.24s, background 0.24s;
-    }
-    .award-item:hover { border-color: rgba(139,105,20,0.2); background: rgba(139,105,20,0.025); }
-    .award-left { display: flex; align-items: baseline; gap: 13px; flex: 1; min-width: 0; }
-    .award-idx { font-family: 'DM Mono', monospace; font-size: 0.56rem; color: var(--muted); opacity: 0.45; flex-shrink: 0; }
-    .award-name { font-size: 0.9rem; color: var(--text); }
-    .award-level {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
-      white-space: nowrap; padding: 4px 11px; flex-shrink: 0;
-    }
-    .gold   { color: #8b6914; background: rgba(139,105,20,0.08); border: 1px solid rgba(139,105,20,0.28); }
-    .silver { color: #5f7080; background: rgba(95,112,128,0.07);  border: 1px solid rgba(95,112,128,0.26); }
-    .bronze { color: #7a5c3a; background: rgba(122,92,58,0.07);   border: 1px solid rgba(122,92,58,0.26); }
-    .honor  { color: var(--red); background: var(--red-light);    border: 1px solid rgba(155,35,53,0.2); }
-
-    /* CAMPUS */
-    #campus { background: var(--bg); border-bottom: 1px solid var(--border); }
-    .campus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-    .campus-card {
-      padding: 30px 32px; background: var(--surface);
-      border: 1px solid var(--border); transition: border-color 0.24s;
-    }
-    .campus-card:hover { border-color: rgba(139,105,20,0.24); }
-    .campus-role { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; color: var(--text); margin-bottom: 5px; }
-    .campus-org { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 7px; }
-    .campus-period { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--accent); }
-
-    /* SKILLS */
-    #skills { background: var(--surface); border-bottom: 1px solid var(--border); }
-    .skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-    .skill-group { padding: 34px; background: var(--bg); border: 1px solid var(--border); }
-    .skill-group-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 20px;
-    }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
-    .skill-tag {
-      font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.04em;
-      color: var(--muted); padding: 5px 11px;
-      border: 1px solid var(--border); background: var(--surface);
-      transition: color 0.22s, border-color 0.22s;
-    }
-    .skill-tag:hover { color: var(--accent); border-color: rgba(139,105,20,0.32); }
-
-    /* CONTACT */
-    #contact { background: var(--bg); border-bottom: 1px solid var(--border); }
-    .contact-grid { display: grid; grid-template-columns: 1fr auto; gap: 80px; align-items: end; }
-    .contact-big {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 300;
-      color: var(--text); line-height: 1.05;
-    }
-    .contact-big em { font-style: italic; color: var(--accent); }
-    .contact-sub { font-size: 0.94rem; color: var(--muted); margin-top: 14px; max-width: 400px; line-height: 1.85; }
-    .contact-links { display: flex; flex-direction: column; gap: 13px; align-items: flex-end; }
-    .contact-link {
-      display: flex; align-items: center; gap: 11px;
-      text-decoration: none; color: var(--muted);
-      font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em;
-      transition: color 0.22s;
-    }
-    .contact-link:hover { color: var(--accent); }
-    .cicon {
-      width: 22px; height: 22px; border: 1px solid currentColor;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 0.56rem; flex-shrink: 0; opacity: 0.65;
-    }
-
-    /* FOOTER */
-    footer {
-      padding: 22px 60px; background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .footer-copy { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); }
-
-    /* REVEAL */
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.75s ease, transform 0.75s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 960px) {
-      .logo-bar, nav, section, .hero, footer { padding-left: 24px; padding-right: 24px; }
-      .hero { grid-template-columns: 1fr; }
-      .hero-photo { width: 180px; }
-      .about-grid, .campus-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; }
-      .edu-item { grid-template-columns: 1fr; gap: 10px; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
@@ -470,16 +37,16 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-left">
-    <p class="hero-eyebrow">Data Science · AI Research · 2005</p>
-    <h1 class="hero-name">李<em>柏</em>熹</h1>
+    <p class="hero-eyebrow">Data Science · AI Research </p>
+    <h1 class="hero-name">李柏熹</h1>
     <p class="hero-en">Li Boxi</p>
-    <div class="party-badge">中国共产党预备党员</div>
+    <div class="party-badge">中共预备党员</div>
     <p class="hero-desc">
-      中央民族大学数据科学与大数据技术专业在读，联合培养于<strong>澳门城市大学</strong>。专注于<strong>推荐系统</strong>与<strong>多模态学习</strong>研究，发表 SCI/EI 论文，斩获国家级竞赛金奖。
+      <strong>中央民族大学</strong> 海南国际学院 数据科学与大数据技术专业（内地与港澳台合作办学），
+      联合培养于<strong>澳门城市大学</strong>。专注于<strong>推荐系统</strong>与<strong>多模态学习</strong>研究，发表 SCI/EI 论文，斩获国家级竞赛金奖等。
     </p>
     <div class="hero-cta">
       <a href="#research" class="btn-primary">查看研究 →</a>
-      <a href="mailto:liptsn0121@gmail.com" class="btn-outline">发送邮件</a>
     </div>
   </div>
   <div class="hero-photo">
@@ -494,9 +61,9 @@
   <h2 class="section-title">关于<em>我</em></h2>
   <div class="about-grid reveal">
     <div class="about-text">
-      <p>本科就读于<strong>中央民族大学海南国际学院</strong>，数据科学与大数据技术专业；联合培养阶段就读于<strong>澳门城市大学数据科学学院</strong>，攻读智能科技与服务学士学位。</p>
-      <p>跟随<strong>澳门城市大学吴世卿助理教授</strong>进行推荐系统 Multimodal Recommendation 研究，探索图像、文本等多维信息在用户建模中的融合机制，研究跨模态对齐技术及用户在不同媒介下的潜在偏好，有效缓解了传统模型在数据稀疏场景下的表现瓶颈。</p>
-      <p>具备扎实的数据科学基础，拥有较强的<strong>中英文学术交流能力</strong>（IELTS 7.0），立志在更高学术平台上攻克人工智能领域的关键问题。</p>
+      <p>本科就读于<strong>中央民族大学</strong>与<strong>澳门城市大学</strong>合作办学项目(3+1),依托海南陵水黎安国际教育创新试验区的国际化平台,主修数据科学与大数据技术专业;大三赴<strong>澳门城市大学</strong>数据科学学院，攻读智能科技与服务学士学位。</p>
+      <p>在科研方面，有幸自大二起加入<strong>澳门城市大学吴世卿助理教授</strong>的研究团队，进行推荐系统 Multimodal Recommendation 研究，探索图像、文本等多维信息在用户建模中的融合机制，研究跨模态对齐技术及用户在不同媒介下的潜在偏好，有效缓解了传统模型在数据稀疏场景下的表现瓶颈。</p>
+      <p>本人具备跨文化学习背景,拥有较强的<strong>中英文学术交流能力</strong>(IELTS 7.0)，拥有深厚的算法基础与大数据处理经验，致力于 AI 领域的前沿技术攻关。</p>
     </div>
     <div class="about-stats">
       <div class="stat-card">
@@ -537,7 +104,7 @@
       <div>
         <div class="edu-school">中央民族大学</div>
         <div class="edu-major">海南国际学院 · 数据科学与大数据技术</div>
-        <div class="edu-major" style="margin-top:5px;font-size:0.77rem;opacity:0.72;">机器学习 · 人工智能 · 数据挖掘 · Python · 大数据技术 · 数据可视化 · 经济学 · 会计学</div>
+        <div class="edu-major" style="margin-top:5px;font-size:0.77rem;opacity:0.72;">机器学习 · 人工智能 · 数据挖掘 · Python · 大数据技术 · 数据可视化 · 经济学 · 会计学等</div>
         <div class="edu-gpa">GPA 3.98 / 5.0</div>
       </div>
       <div class="edu-degree">本科在读</div>
@@ -718,7 +285,7 @@
         <span class="cicon">@</span>liptsn0121@gmail.com
       </a>
       <a href="tel:15961666114" class="contact-link">
-        <span class="cicon">☏</span>159 6166 6114
+        <span class="cicon">☏</span>(+86)159 6166 6114
       </a>
       <a href="https://github.com/liptsn" target="_blank" class="contact-link">
         <span class="cicon">↗</span>github.com/liptsn
@@ -732,7 +299,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <span class="footer-copy">© 2026 李柏熹 · Li Boxi · liptsn.github.io</span>
+  <span class="footer-copy">© 2026 李柏熹 · Li Boxi</span>
   <span class="footer-copy">中央民族大学 · 澳门城市大学</span>
 </footer>
 
