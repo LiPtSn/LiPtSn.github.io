@@ -105,7 +105,7 @@ nav {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   display: grid;
-  grid-template-columns: 1fr 220px;
+  grid-template-columns: 1fr 300px;
   gap: 60px;
   align-items: center;
   position: relative;
@@ -234,7 +234,7 @@ section { padding: 96px 60px; }
 .stat-card:hover { border-color: rgba(139,105,20,0.3); }
 .stat-number {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem; font-weight: 300; color: var(--accent);
+  font-size: 2.8rem; font-weight: 500; color: var(--accent);
   line-height: 1; display: block;
 }
 .stat-label {
@@ -309,6 +309,7 @@ section { padding: 96px 60px; }
 }
 .paper-authors { font-size: 0.81rem; color: var(--muted); }
 .paper-authors strong { color: var(--accent); font-weight: 400; }
+.paper-advisor { font-size: 0.75rem; color: var(--muted); margin-top: 7px; font-style: italic; opacity: 0.8; }
 .research-current {
   margin-top: 36px; padding: 34px 40px;
   border: 1px solid rgba(139,105,20,0.18);
@@ -351,6 +352,13 @@ section { padding: 96px 60px; }
 .award-left { display: flex; align-items: baseline; gap: 13px; flex: 1; min-width: 0; }
 .award-idx { font-family: 'DM Mono', monospace; font-size: 0.56rem; color: var(--muted); opacity: 0.45; flex-shrink: 0; }
 .award-name { font-size: 0.9rem; color: var(--text); }
+.award-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.award-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem; letter-spacing: 0.08em;
+  color: var(--accent); border: 1px solid rgba(139,105,20,0.3);
+  padding: 3px 9px; white-space: nowrap;
+}
 .award-level {
   font-family: 'DM Mono', monospace;
   font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
